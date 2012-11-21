@@ -3,7 +3,7 @@
 
 What is Android ImageResizer?
 --------
-Library which provides simple image resizing, cropping and rotation.
+Wrapper around `Bitmap.createScaledBitmap` with cropping and rotation.
 
 Usage
 --------
