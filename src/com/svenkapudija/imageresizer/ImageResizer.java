@@ -55,33 +55,53 @@ public class ImageResizer {
 			mode = ResizeMode.AUTOMATIC;
 		}
 		
-		// Resize based on mode
+		// Calculate is it better to resize FIT_TO_WIDTH or
+		// FIT_TO_HEIGHT
 		if(mode == ResizeMode.AUTOMATIC) {
-			Bitmap resized = Bitmap.createScaledBitmap(original, width, height, true);
-			original.recycle();
-			return resized;
-		} else if(mode == ResizeMode.FIT_TO_WIDTH) {
-			
-		} else if(mode == ResizeMode.FIT_TO_HEIGHT) {
-			
-		} else if(mode == ResizeMode.FIT_EXACT) {
-			
+			if(getOrientation(original.getWidth(), original.getHeight()) == ImageOrientation.LANDSCAPE) {
+				mode = ResizeMode.FIT_TO_WIDTH;
+			} else {
+				mode = ResizeMode.FIT_TO_HEIGHT;
+			}
 		}
 		
-		return null;
+		if(mode == ResizeMode.FIT_TO_WIDTH) {
+			height = original.getHeight() / (original.getWidth()/width);
+		} else if(mode == ResizeMode.FIT_TO_HEIGHT) {
+			width = original.getWidth() / (original.getHeight()/height);
+		}
+		
+		Bitmap resized = Bitmap.createScaledBitmap(original, width, height, true);
+		original.recycle();
+		return resized;
+	}
+	
+	private static ImageOrientation getOrientation(int width, int height) {
+		if(width >= height) {
+			return ImageOrientation.LANDSCAPE;
+		} else {
+			return ImageOrientation.PORTRAIT;
+		}
+	}
+	
+	private enum ImageOrientation {
+		
+		PORTRAIT,
+		LANDSCAPE
+		
 	}
 	
 	/*** CROP ***/
 	public static Bitmap crop(Bitmap original, int width, int height) {
-		return null;
+		return crop(original, -1, -1, width, height, null);
 	}
 	
 	public static Bitmap crop(Bitmap original, int x, int y, int width, int height) {
-		return null;
+		return crop(original, x, y, width, height, null);
 	}
 	
 	public static Bitmap crop(Bitmap original, int width, int height, DimensionUnit unit, Context ... context) {
-		return null;
+		return crop(original, -1, -1, width, height, unit, context);
 	}
 	
 	public static Bitmap crop(Bitmap original, int x, int y, int width, int height, DimensionUnit unit, Context ... context) {
@@ -93,7 +113,35 @@ public class ImageResizer {
 			return null;
 		}
 		
-		return null;
+		if(original.getWidth() < width || original.getHeight() < height)
+    		return original;
+		
+		int newWidth, newHeight;
+		int originalAspectRatio = original.getWidth() / original.getHeight();
+		int croppedAspectRatio = width / height;
+
+		if (originalAspectRatio >= croppedAspectRatio) {
+			// If the original is wider than cropped image
+			newHeight = height;
+			newWidth = original.getWidth() / (original.getHeight() / height);
+		} else {
+			// If the cropped image is wider than the original
+			newWidth = width;
+			newHeight = original.getHeight() / (original.getWidth() / width);
+		}
+		
+        Bitmap result = Bitmap.createScaledBitmap(original, newWidth, newHeight, true);
+        original.recycle();
+        
+        if(x < 0) {
+        	x = (newWidth - width) / 2;
+        }
+        
+        if(y < 0) {
+        	y = (newHeight - height) / 2;
+        }
+        
+    	return Bitmap.createBitmap(result, x, y, width, height);
 	}
 	
 	/*** ROTATE ***/
