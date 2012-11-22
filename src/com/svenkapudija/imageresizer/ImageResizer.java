@@ -105,6 +105,10 @@ public class ImageResizer {
 	}
 	
 	public static Bitmap crop(Bitmap original, int x, int y, int width, int height, DimensionUnit unit, Context ... context) {
+		if(unit == null) {
+			unit = DimensionUnit.PX;
+		}
+		
 		try {
 			width = DimensionUnit.convertToPixels(unit, width, context);
 			height = DimensionUnit.convertToPixels(unit, height, context);
@@ -141,7 +145,10 @@ public class ImageResizer {
         	y = (newHeight - height) / 2;
         }
         
-    	return Bitmap.createBitmap(result, x, y, width, height);
+        Bitmap croppedResult = Bitmap.createBitmap(result, x, y, width, height);
+        result.recycle();
+        
+    	return croppedResult;
 	}
 	
 	/*** ROTATE ***/
