@@ -1,6 +1,7 @@
 What is Android ImageResizer?
 --------
-Wrapper around `Bitmap.createScaledBitmap` with cropping, rotation, flipping and support for multiple dimension units.
+Simple library which provides `Bitmap` resizing, cropping, rotation, flipping and support for multiple dimension units
+on Android.
 
 Usage
 --------
