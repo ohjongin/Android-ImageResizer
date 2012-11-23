@@ -1,7 +1,11 @@
 package com.svenkapudija.imageresizer;
 
+import java.io.ByteArrayOutputStream;
+
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.util.Log;
 
 public class ImageResizer {
@@ -66,14 +70,67 @@ public class ImageResizer {
 		}
 		
 		if(mode == ResizeMode.FIT_TO_WIDTH) {
-			height = original.getHeight() / (original.getWidth()/width);
+			height = (int) (original.getHeight() / ((double) original.getWidth()/width));
 		} else if(mode == ResizeMode.FIT_TO_HEIGHT) {
-			width = original.getWidth() / (original.getHeight()/height);
+			width = (int) (original.getWidth() / ((double) original.getHeight()/height));
 		}
 		
-		Bitmap resized = Bitmap.createScaledBitmap(original, width, height, true);
+		return createBitmap(original, width, height);
+	}
+	
+	private static Bitmap createBitmap(Bitmap original, int width, int height, ImageRotation ... rotation) {
+		// Retrieved from http://stackoverflow.com/questions/4231817
+		
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		original.compress(Bitmap.CompressFormat.PNG, 100, stream);
+		byte[] byteArray = stream.toByteArray();
+		
+		int srcWidth = original.getWidth();
+		//int srcHeight = original.getHeight();
+		
 		original.recycle();
-		return resized;
+		
+		int inSampleSize = 1;
+		while(srcWidth / 2 > width){
+		    srcWidth /= 2;
+		    //srcHeight /= 2;
+		    inSampleSize *= 2;
+		}
+
+		float desiredScale = (float) width / srcWidth;
+
+		// Decode with inSampleSize
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = false;
+		options.inDither = false;
+		options.inSampleSize = inSampleSize;
+		options.inScaled = false;
+		options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+		Bitmap sampledSrcBitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length, options);
+		
+		// Resize
+		Matrix matrix = new Matrix();
+		
+		// Rotate if necessary
+		if(rotation != null && rotation.length > 0 && rotation[0] != null) {
+			ImageRotation rotationType = rotation[0];
+			if(rotationType == ImageRotation.FLIP_HORIZONTAL) {
+				matrix.setScale(-1, 1);
+				matrix.postTranslate(width, 0);
+			} else if(rotationType == ImageRotation.FLIP_VERTICAL) {
+				matrix.setScale(1, -1);
+				matrix.postTranslate(0, height);
+			} else {
+				matrix.setRotate(ImageRotation.inDegrees(rotation[0]), width/2, height/2);
+			}
+		} else {
+			matrix.postScale(desiredScale, desiredScale);
+		}
+		
+		Bitmap scaledBitmap = Bitmap.createBitmap(sampledSrcBitmap, 0, 0, sampledSrcBitmap.getWidth(), sampledSrcBitmap.getHeight(), matrix, true);
+		sampledSrcBitmap.recycle();
+
+		return scaledBitmap;
 	}
 	
 	private static ImageOrientation getOrientation(int width, int height) {
@@ -134,9 +191,6 @@ public class ImageResizer {
 			newHeight = original.getHeight() / (original.getWidth() / width);
 		}
 		
-        Bitmap result = Bitmap.createScaledBitmap(original, newWidth, newHeight, true);
-        original.recycle();
-        
         if(x < 0) {
         	x = (newWidth - width) / 2;
         }
@@ -145,15 +199,19 @@ public class ImageResizer {
         	y = (newHeight - height) / 2;
         }
         
-        Bitmap croppedResult = Bitmap.createBitmap(result, x, y, width, height);
-        result.recycle();
+        // Resize
+        Bitmap scaledBitmap = createBitmap(original, newWidth, newHeight);
         
-    	return croppedResult;
+        // Crop
+        Bitmap croppedBitmap = Bitmap.createBitmap(scaledBitmap, x, y, width, height);
+        scaledBitmap.recycle();
+        
+    	return croppedBitmap;
 	}
 	
 	/*** ROTATE ***/
 	public static Bitmap rotate(Bitmap original, ImageRotation rotation) {
-		return null;
+		return createBitmap(original, original.getWidth(), original.getHeight(), rotation);
 	}
 	
 }
