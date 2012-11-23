@@ -13,34 +13,116 @@ public class ImageResizer {
 	private static final String TAG = ImageResizer.class.getName();
 	
 	/*** RESIZE ***/
+	
+	/**
+	 * <p>Resize your bitmap image to provided <code>size</code> (width and height are the same).</p>
+	 * 
+	 * @param original		Your original image.
+	 * @param size			Desired width and height.
+	 * @return				Resized image.
+	 */
 	public static Bitmap resize(Bitmap original, int size) {
 		return resize(original, size, size, null);
 	}
 	
+	/**
+	 * <p>Resize your bitmap image to provided <code>size</code> (width and height are the same).</p>
+	 * 
+	 * @param original		Your original image.
+	 * @param size			Desired width and height.
+	 * @param mode			<code>AUTOMATIC</code> resize mode chooses <code>FIT_TO_WIDTH</code> or <code>FIT_TO_HEIGHT</code> based
+	 * 						on original image orientation (landscape - <code>FIT_TO_WIDTH</code>, portrait - <code>FIT_TO_HEIGHT</code>).
+	 * @return				Resized image.
+	 */
 	public static Bitmap resize(Bitmap original, int size, ResizeMode mode) {
 		return resize(original, size, size, mode, null);
 	}
 	
+	/**
+	 * <p>Resize your bitmap image to provided <code>size</code> (width and height are the same).</p>
+	 * 
+	 * @param original		Your original image.
+	 * @param size			Desired width and height.
+	 * @param unit			If you intend to use <code>DP dimension unit</code> be sure to provide valid <code>context</code>,
+	 * 						otherwise it's not needed.
+	 * @param context		Required if using DP dimension unit.
+	 * @return				Resized image.
+	 */
 	public static Bitmap resize(Bitmap original, int size, DimensionUnit unit, Context ... context) {
 		return resize(original, size, size, null, unit, context);
 	}
 	
+	/**
+	 * <p>Resize your bitmap image to provided <code>size</code> (width and height are the same).</p>
+	 * 
+	 * @param original		Your original image.
+	 * @param width			Desired width.
+	 * @param height		Desired height.
+	 * @param mode			<code>AUTOMATIC</code> resize mode chooses <code>FIT_TO_WIDTH</code> or <code>FIT_TO_HEIGHT</code> based
+	 * 						on original image orientation (landscape - <code>FIT_TO_WIDTH</code>, portrait - <code>FIT_TO_HEIGHT</code>).
+	 * @param unit			If you intend to use <code>DP dimension unit</code> be sure to provide valid <code>context</code>,
+	 * 						otherwise it's not needed.
+	 * @param context		Required if using DP dimension unit.
+	 * @return				Resized image.
+	 */
 	public static Bitmap resize(Bitmap original, int size, ResizeMode mode, DimensionUnit unit, Context ... context) {
 		return resize(original, size, size, mode, unit, context);
 	}
 	
+	/**
+	 * <p>Resize your bitmap image to provided <code>width</code> and <code>height</code>.</p>
+	 * 
+	 * @param original		Your original image.
+	 * @param width			Desired width.
+	 * @param height		Desired height.
+	 * @return				Resized image.
+	 */
 	public static Bitmap resize(Bitmap original, int width, int height) {
 		return resize(original, width, height, null);
 	}
 	
+	/**
+	 * <p>Resize your bitmap image to provided <code>width</code> and <code>height</code>.</p>
+	 * 
+	 * @param original		Your original image.
+	 * @param width			Desired width.
+	 * @param height		Desired height.
+	 * @param mode			<code>AUTOMATIC</code> resize mode chooses <code>FIT_TO_WIDTH</code> or <code>FIT_TO_HEIGHT</code> based
+	 * 						on original image orientation (landscape - <code>FIT_TO_WIDTH</code>, portrait - <code>FIT_TO_HEIGHT</code>).
+	 * @return				Resized image.
+	 */
 	public static Bitmap resize(Bitmap original, int width, int height, ResizeMode mode) {
 		return resize(original, width, height, mode, null);
 	}
 	
+	/**
+	 * <p>Resize your bitmap image to provided <code>width</code> and <code>height</code>.</p>
+	 * 
+	 * @param original		Your original image.
+	 * @param width			Desired width.
+	 * @param height		Desired height.
+	 * @param unit			If you intend to use <code>DP dimension unit</code> be sure to provide valid <code>context</code>,
+	 * 						otherwise it's not needed.
+	 * @param context		Required if using DP dimension unit.
+	 * @return				Resized image.
+	 */
 	public static Bitmap resize(Bitmap original, int width, int height, DimensionUnit unit, Context ... context) {
 		return resize(original, width, height, null, unit, context);
 	}
 	
+	/**
+	 * <p>Resize your bitmap image to provided <code>width</code> and <code>height</code>.</p>
+	 * 
+	 * @param original		Your original image.
+	 * @param width			Desired width.
+	 * @param height		Desired height.
+	 * @param mode			<code>AUTOMATIC</code> resize mode chooses <code>FIT_TO_WIDTH</code> or <code>FIT_TO_HEIGHT</code> based
+	 * 						on original image orientation (landscape - <code>FIT_TO_WIDTH</code>, portrait - <code>FIT_TO_HEIGHT</code>).
+	 * @param unit			If you intend to use <code>DP dimension unit</code> be sure to provide valid <code>context</code>,
+	 * 						otherwise it's not needed.
+	 * @param context		Required if using DP dimension unit.
+	 * @return				Resized image.
+	 */
 	public static Bitmap resize(Bitmap original, int width, int height, ResizeMode mode, DimensionUnit unit, Context ... context) {
 		if(unit == null) {
 			unit = DimensionUnit.PX;
@@ -78,6 +160,16 @@ public class ImageResizer {
 		return createBitmap(original, width, height);
 	}
 	
+	/**
+	 * Scales or rotates a bitmap using custom scaling because <code>Bitmap.createScaledImage</code> provides
+	 * poor resulting image quality.
+	 * 
+	 * @param original
+	 * @param width
+	 * @param height
+	 * @param rotation
+	 * @return
+	 */
 	private static Bitmap createBitmap(Bitmap original, int width, int height, ImageRotation ... rotation) {
 		// Retrieved from http://stackoverflow.com/questions/4231817
 		
@@ -107,6 +199,7 @@ public class ImageResizer {
 		options.inScaled = false;
 		options.inPreferredConfig = Bitmap.Config.ARGB_8888;
 		Bitmap sampledSrcBitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length, options);
+		byteArray = null;
 		
 		// Resize
 		Matrix matrix = new Matrix();
@@ -149,18 +242,65 @@ public class ImageResizer {
 	}
 	
 	/*** CROP ***/
+	
+	/**
+	 * Crops the image to specific <code>width</code> and <code>height</code>.
+	 * 
+	 * @param original		Original image.
+	 * @param width			Desired width
+	 * @param height		Desired height
+	 * @return				Cropped image. If any of the original dimensions are smaller than desired ones,
+	 * 						original image is returned.
+	 */
 	public static Bitmap crop(Bitmap original, int width, int height) {
 		return crop(original, -1, -1, width, height, null);
 	}
 	
+	/**
+	 * Crops the image to specific <code>width</code> and <code>height</code>.
+	 * 
+	 * @param original		Original image.
+	 * @param x				The X coordinate of the first pixel in source
+	 * @param y				The Y coordinate of the first pixel in source
+	 * @param width			Desired width
+	 * @param height		Desired height
+	 * @return				Cropped image. If any of the original dimensions are smaller than desired ones,
+	 * 						original image is returned.
+	 */
 	public static Bitmap crop(Bitmap original, int x, int y, int width, int height) {
 		return crop(original, x, y, width, height, null);
 	}
 	
+	/**
+	 * Crops the image to specific <code>width</code> and <code>height</code>.
+	 * 
+	 * @param original		Original image.
+	 * @param width			Desired width
+	 * @param height		Desired height
+	 * @param unit			If you intend to use <code>DP dimension unit</code> be sure to provide valid <code>context</code>,
+	 * 						otherwise it's not needed.
+	 * @param context		Required if using DP dimension unit.
+	 * @return				Cropped image. If any of the original dimensions are smaller than desired ones,
+	 * 						original image is returned.
+	 */
 	public static Bitmap crop(Bitmap original, int width, int height, DimensionUnit unit, Context ... context) {
 		return crop(original, -1, -1, width, height, unit, context);
 	}
 	
+	/**
+	 * Crops the image to specific <code>width</code> and <code>height</code>.
+	 * 
+	 * @param original		Original image.
+	 * @param x				The X coordinate of the first pixel in source
+	 * @param y				The Y coordinate of the first pixel in source
+	 * @param width			Desired width
+	 * @param height		Desired height
+	 * @param unit			If you intend to use <code>DP dimension unit</code> be sure to provide valid <code>context</code>,
+	 * 						otherwise it's not needed.
+	 * @param context		Required if using DP dimension unit.
+	 * @return				Cropped image. If any of the original dimensions are smaller than desired ones,
+	 * 						original image is returned.
+	 */
 	public static Bitmap crop(Bitmap original, int x, int y, int width, int height, DimensionUnit unit, Context ... context) {
 		if(unit == null) {
 			unit = DimensionUnit.PX;
@@ -210,6 +350,15 @@ public class ImageResizer {
 	}
 	
 	/*** ROTATE ***/
+	
+	/**
+	 * Rotates the image by 90, 180 or 270 degrees. Also can flip the image horizontally
+	 * or vertically.
+	 * 
+	 * @param original		Original image.
+	 * @param rotation		Rotation type.
+	 * @return				Rotated/flipped image.
+	 */
 	public static Bitmap rotate(Bitmap original, ImageRotation rotation) {
 		return createBitmap(original, original.getWidth(), original.getHeight(), rotation);
 	}
