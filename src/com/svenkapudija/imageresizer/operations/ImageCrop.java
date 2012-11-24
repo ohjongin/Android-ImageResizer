@@ -1,10 +1,14 @@
 package com.svenkapudija.imageresizer.operations;
 
-import com.svenkapudija.imageresizer.ImageResizerException;
+import java.io.File;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
+
+import com.svenkapudija.imageresizer.ImageResizerException;
+import com.svenkapudija.imageresizer.utils.ImageWriter;
 
 public class ImageCrop {
 
@@ -42,6 +46,16 @@ public class ImageCrop {
         resizedBitmap.recycle();
         
     	return croppedBitmap;
+	}
+	
+	public static Bitmap crop(File original, boolean overwrite, int x, int y, int width, int height, DimensionUnit unit, Context ... context) {
+		Bitmap croppedBitmap = crop(BitmapFactory.decodeFile(original.getAbsolutePath()), x, y, width, height, unit, context);
+		
+		if(overwrite) {
+			ImageWriter.writeToFile(croppedBitmap, original);
+		}
+		
+		return croppedBitmap;
 	}
 
 	private static boolean originalIsWiderThanCroppedImage(int originalAspectRatio, int croppedAspectRatio) {

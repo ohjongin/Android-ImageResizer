@@ -19,10 +19,7 @@ public class MainActivity extends Activity {
         
         Bitmap myImage = null;
         
-        // The simplest case - width and height are the same size
-        ImageResizer.resize(myImage, 500);
-        
-        // Different width and height
+        // The simplest case
         ImageResizer.resize(myImage, 640, 480);
         
         // Choose ResizeMode - FIT_TO_WIDTH, FIT_TO_HEIGHT, FIT_EXACT or AUTOMATIC

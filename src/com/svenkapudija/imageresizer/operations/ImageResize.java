@@ -1,10 +1,14 @@
 package com.svenkapudija.imageresizer.operations;
 
-import com.svenkapudija.imageresizer.ImageResizerException;
+import java.io.File;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
+
+import com.svenkapudija.imageresizer.ImageResizerException;
+import com.svenkapudija.imageresizer.utils.ImageWriter;
 
 public class ImageResize {
 	
@@ -31,7 +35,17 @@ public class ImageResize {
 		
 		return ImageScalingRotating.scale(original, width, height);
 	}
-
+	
+	public static Bitmap resize(File original, boolean overwrite, int width, int height, ResizeMode mode, DimensionUnit unit, Context ... context) {
+		Bitmap scaledBitmap = resize(BitmapFactory.decodeFile(original.getAbsolutePath()), width, height, mode, unit, context);
+		
+		if(overwrite) {
+			ImageWriter.writeToFile(scaledBitmap, original);
+		}
+		
+		return scaledBitmap;
+	}
+	
 	private static ResizeMode calculateResizeMode(int width, int height) {
 		if(getOrientation(width, height) == ImageOrientation.LANDSCAPE)
 			return ResizeMode.FIT_TO_WIDTH;
