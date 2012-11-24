@@ -40,6 +40,9 @@ public class ImageResizer {
 		return ImageResize.resize(original, width, height, null, unit, context);
 	}
 	
+	public static Bitmap resize(Bitmap original, int width, int height, ResizeMode mode, DimensionUnit unit, Context ... context) {
+		return ImageResize.resize(original, width, height, mode, unit, context);
+	}
 	
 	public static Bitmap crop(Bitmap original, int width, int height) {
 		return ImageCrop.crop(original, -1, -1, width, height, null);
@@ -51,6 +54,10 @@ public class ImageResizer {
 	
 	public static Bitmap crop(Bitmap original, int width, int height, DimensionUnit unit, Context ... context) {
 		return ImageCrop.crop(original, -1, -1, width, height, unit, context);
+	}
+	
+	public static Bitmap crop(Bitmap original, int x, int y, int width, int height, DimensionUnit unit, Context ... context) {
+		return ImageCrop.crop(original, x, y, width, height, unit, context);
 	}
 	
 	
