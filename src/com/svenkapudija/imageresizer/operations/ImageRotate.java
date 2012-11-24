@@ -15,6 +15,9 @@ public class ImageRotate {
 	
 	public static Bitmap rotate(File original, boolean overwrite, ImageRotation rotation) {
 		Bitmap originalBitmap = BitmapFactory.decodeFile(original.getAbsolutePath());
+		if(originalBitmap == null) {
+			return null;
+		}
 		
 		Bitmap rotatedBitmap = ImageScalingRotating.rotate(originalBitmap, originalBitmap.getWidth(), originalBitmap.getHeight(), rotation);
 		originalBitmap.recycle();

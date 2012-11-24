@@ -37,7 +37,13 @@ public class ImageResize {
 	}
 	
 	public static Bitmap resize(File original, boolean overwrite, int width, int height, ResizeMode mode, DimensionUnit unit, Context ... context) {
-		Bitmap scaledBitmap = resize(BitmapFactory.decodeFile(original.getAbsolutePath()), width, height, mode, unit, context);
+		Bitmap originalBitmap = BitmapFactory.decodeFile(original.getAbsolutePath());
+		if(originalBitmap == null) {
+			return null;
+		}
+		
+		Bitmap scaledBitmap = resize(originalBitmap, width, height, mode, unit, context);
+		originalBitmap.recycle();
 		
 		if(overwrite) {
 			ImageWriter.writeToFile(scaledBitmap, original);

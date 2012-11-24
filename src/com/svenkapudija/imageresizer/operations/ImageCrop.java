@@ -49,7 +49,13 @@ public class ImageCrop {
 	}
 	
 	public static Bitmap crop(File original, boolean overwrite, int x, int y, int width, int height, DimensionUnit unit, Context ... context) {
-		Bitmap croppedBitmap = crop(BitmapFactory.decodeFile(original.getAbsolutePath()), x, y, width, height, unit, context);
+		Bitmap originalBitmap = BitmapFactory.decodeFile(original.getAbsolutePath());
+		if(originalBitmap == null) {
+			return null;
+		}
+		
+		Bitmap croppedBitmap = crop(originalBitmap, x, y, width, height, unit, context);
+		originalBitmap.recycle();
 		
 		if(overwrite) {
 			ImageWriter.writeToFile(croppedBitmap, original);
