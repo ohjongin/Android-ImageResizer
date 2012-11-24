@@ -8,7 +8,7 @@ public enum DimensionUnit {
 	DP;
 
 	public static int convertToPixels(DimensionUnit unit, int size, Context ... context) throws ImageResizerException {
-		if(unit == DimensionUnit.PX) {
+		if(unit == null || unit == DimensionUnit.PX) {
 			return size;
 		}
 		
