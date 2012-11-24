@@ -6,6 +6,9 @@ on Android.
 Usage
 --------
 
+Import a project into Eclipse and reference to it from your project as an Android Library project for more info visit
+[Referencing Library Project](http://developer.android.com/tools/projects/projects-eclipse.html#ReferencingLibraryProject).
+
 ### Resize
 
     // The simplest case - width and height are the same size
