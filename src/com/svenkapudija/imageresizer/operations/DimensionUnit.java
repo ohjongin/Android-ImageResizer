@@ -1,4 +1,6 @@
-package com.svenkapudija.imageresizer;
+package com.svenkapudija.imageresizer.operations;
+
+import com.svenkapudija.imageresizer.ImageResizerException;
 
 import android.content.Context;
 

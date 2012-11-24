@@ -1,4 +1,4 @@
-package com.svenkapudija.imageresizer;
+package com.svenkapudija.imageresizer.operations;
 
 public enum ImageRotation {
 
