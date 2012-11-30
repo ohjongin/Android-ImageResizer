@@ -6,10 +6,10 @@ on Android.
 Usage
 --------
 
-### Resize
+Import a project into Eclipse and reference to it from your project as an Android Library project for more info visit
+[Referencing Library Project](http://developer.android.com/tools/projects/projects-eclipse.html#ReferencingLibraryProject).
 
-    // The simplest case - width and height are the same size
-    ImageResizer.resize(myImage, 500);
+### Resize
         
     // Different width and height
     ImageResizer.resize(myImage, 640, 480);
@@ -37,6 +37,14 @@ Very memory-intensive for high-resolution images (for ex. `2560*1600`), better s
 
     // Flip an image horizontally or vertically
     ImageResizer.rotate(myImage, ImageRotation.FLIP_HORIZONTAL);
+
+### Files
+
+There is support for `File` parameter instead of `Bitmap` on all constructors and required parameter is than
+`boolean overwrite` if the rotated/scaled/cropped image should replace the original Bitmap file on the disk.
+
+    // Crop to 50x50 pixels and save cropped image to the original source file (overwrite it)
+    ImageResizer.crop(myBitmapFile, true, 50, 50);
 
 Developed by
 ------------
