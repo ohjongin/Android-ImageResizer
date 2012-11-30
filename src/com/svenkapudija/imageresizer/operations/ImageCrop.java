@@ -40,8 +40,9 @@ public class ImageCrop {
 		
         Bitmap resizedBitmap = ImageScalingRotating.scale(original, newWidth, newHeight);
         
-        x = calculateX(x, newWidth, width);
-		y = calculateY(y, newHeight, height);
+        x = calculateX(x, resizedBitmap.getWidth(), width);
+		y = calculateY(y, resizedBitmap.getHeight(), height);
+		
         Bitmap croppedBitmap = Bitmap.createBitmap(resizedBitmap, x, y, width, height);
         resizedBitmap.recycle();
         
