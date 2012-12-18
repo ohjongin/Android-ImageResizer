@@ -2,37 +2,45 @@ package com.svenkapudija.imageresizer.operations;
 
 import java.io.File;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+
+import com.svenkapudija.imageresizer.utils.ImageDecoder;
 
 public class ImageCrop {
 
 	private static final String TAG = ImageCrop.class.getName();
 	
-	private File original;
-	private int x;
-	private int y;
-	private int width;
-	private int height;
-	
-	public ImageCrop(File original, int x, int y, int width, int height) {
-		this.original = original;
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
-	}
-
-	public Bitmap crop() {
-		BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        Bitmap sampledSrcBitmap = BitmapFactory.decodeFile(original.getAbsolutePath(), options);
+	public static Bitmap crop(Resources resources, int resId, int x, int y, int width, int height) {
+		Bitmap sampledSrcBitmap = ImageDecoder.decodeResource(resources, resId, width, height);
 		if(sampledSrcBitmap == null) {
 			return null;
 		}
 		
-		int sourceWidth = options.outWidth;
-		int sourceHeight = options.outHeight;
+		return cropBitmap(sampledSrcBitmap, x, y, width, height);
+	}
+	
+	public static Bitmap crop(File original, int x, int y, int width, int height) {
+		Bitmap sampledSrcBitmap = ImageDecoder.decodeFile(original, width, height);
+		if(sampledSrcBitmap == null) {
+			return null;
+		}
+		
+		return cropBitmap(sampledSrcBitmap, x, y, width, height);
+	}
+	
+	public static Bitmap crop(byte[] byteArray, int x, int y, int width, int height) {
+		Bitmap sampledSrcBitmap = ImageDecoder.decodeByteArray(byteArray, width, height);
+		if(sampledSrcBitmap == null) {
+			return null;
+		}
+		
+		return cropBitmap(sampledSrcBitmap, x, y, width, height);
+	}
+	
+	private static Bitmap cropBitmap(Bitmap sampledSrcBitmap, int x, int y, int width, int height) {
+		int sourceWidth = sampledSrcBitmap.getWidth();
+		int sourceHeight = sampledSrcBitmap.getHeight();
 		
 		if(originalIsSmallerThanResult(sourceWidth, sourceHeight, width, height))
     		return sampledSrcBitmap;
@@ -49,7 +57,7 @@ public class ImageCrop {
 			newHeight = sourceHeight / (sourceWidth / width);
 		}
 		
-        Bitmap resizedBitmap = new ImageResize(original, newWidth, newHeight, null).resize();
+        Bitmap resizedBitmap = ImageResize.resize(sampledSrcBitmap, newWidth, newHeight, null);
         
         x = calculateX(x, resizedBitmap.getWidth(), width);
 		y = calculateY(y, resizedBitmap.getHeight(), height);
@@ -60,15 +68,15 @@ public class ImageCrop {
     	return croppedBitmap;
 	}
 	
-	private boolean originalIsWiderThanCroppedImage(int originalAspectRatio, int croppedAspectRatio) {
+	private static boolean originalIsWiderThanCroppedImage(int originalAspectRatio, int croppedAspectRatio) {
 		return originalAspectRatio >= croppedAspectRatio;
 	}
 
-	private boolean originalIsSmallerThanResult(int originalWidth, int originalHeight, int width, int height) {
+	private static boolean originalIsSmallerThanResult(int originalWidth, int originalHeight, int width, int height) {
 		return originalWidth < width || originalHeight < height;
 	}
 	
-	private int calculateX(int x, int newWidth, int width) {
+	private static int calculateX(int x, int newWidth, int width) {
         if(x < 0) {
         	x = (newWidth - width) / 2;
         }
@@ -76,7 +84,7 @@ public class ImageCrop {
         return x;
 	}
 	
-	private int calculateY(int y, int newHeight, int height) {
+	private static int calculateY(int y, int newHeight, int height) {
         if(y < 0) {
         	y = (newHeight - height) / 2;
         }

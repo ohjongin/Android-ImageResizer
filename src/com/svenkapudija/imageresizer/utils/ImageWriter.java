@@ -11,7 +11,7 @@ import android.graphics.Bitmap.CompressFormat;
 
 public class ImageWriter {
 
-	public static void writeToFile(Bitmap image, File file) {
+	public static boolean writeToFile(Bitmap image, File file) {
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		image.compress(CompressFormat.JPEG, 100, bytes);
     	
@@ -21,9 +21,13 @@ public class ImageWriter {
 			fos.close();
     	} catch (FileNotFoundException e) {
 			e.printStackTrace();
+			return false;
 		} catch (IOException e) {
 			e.printStackTrace();
+			return false;
 		}
+    	
+    	return true;
 	}
 	
 }

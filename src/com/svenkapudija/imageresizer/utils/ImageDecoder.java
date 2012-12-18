@@ -23,18 +23,26 @@ public class ImageDecoder {
         return BitmapFactory.decodeFile(bitmapFile.getAbsolutePath(), options);
 	}
 	
-	public static Bitmap decodeResource(Resources res, int resId, int reqWidth, int reqHeight) {
+	public static Bitmap decodeResource(Resources res, int resId) {
+		return decodeResource(res, resId, -1, -1);
+	}
+	
+	public static Bitmap decodeResource(Resources resources, int resId, int reqWidth, int reqHeight) {
 	    // First decode with inJustDecodeBounds=true to check dimensions
 	    final BitmapFactory.Options options = new BitmapFactory.Options();
 	    options.inJustDecodeBounds = true;
-	    BitmapFactory.decodeResource(res, resId, options);
+	    BitmapFactory.decodeResource(resources, resId, options);
 
 	    // Calculate inSampleSize
 	    options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
 
 	    // Decode bitmap with inSampleSize set
 	    options.inJustDecodeBounds = false;
-	    return BitmapFactory.decodeResource(res, resId, options);
+	    return BitmapFactory.decodeResource(resources, resId, options);
+	}
+	
+	public static Bitmap decodeByteArray(byte[] byteArray) {
+		return decodeByteArray(byteArray, -1, -1);
 	}
 	
 	public static Bitmap decodeByteArray(byte[] byteArray, int reqWidth, int reqHeight) {
