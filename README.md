@@ -1,7 +1,7 @@
 What is Android ImageResizer?
 --------
-Simple library which provides `Bitmap` resizing, cropping, rotation, flipping and support for multiple dimension units
-on Android.
+Simple library which provides `Bitmap` (in form of `File`, `byte[]` and `Resource`) resizing, cropping, rotation, flipping on Android. Used tips from
+[developer.android.com](http://developer.android.com/training/building-graphics.html).
 
 Usage
 --------
@@ -12,39 +12,28 @@ Import a project into Eclipse and reference to it from your project as an Androi
 ### Resize
         
     // Different width and height
-    ImageResizer.resize(myImage, 640, 480);
+    ImageResizer.resize(myImageFile, 640, 480);
         
     // Choose ResizeMode - FIT_TO_WIDTH, FIT_TO_HEIGHT, FIT_EXACT or AUTOMATIC
-    ImageResizer.resize(myImage, 640, 480, ResizeMode.FIT_TO_WIDTH);
-        
-    // Resize size based on DP units (library will convert those into pixels
-    // based on device screen density)
-    ImageResizer.resize(myImage, 200, 200, DimensionUnit.DP, this);
+    ImageResizer.resize(myImageFile, 640, 480, ResizeMode.FIT_TO_WIDTH);
         
 ### Crop
 
     // Basic croping
-    ImageResizer.crop(myImage, 500, 500);
+    ImageResizer.crop(myImageFile, 500, 500);
 
     // Croping with specified starting X and Y point
-    ImageResizer.crop(myImage, 50, 50, 640, 480);
+    ImageResizer.crop(myImageFile, 50, 50, 640, 480);
 
 ### Rotation and flipping
 Very memory-intensive for high-resolution images (for ex. `2560*1600`), better scale it down and then rotate.
 
     // Rotate an image for 90, 180 or 270 degrees
-    ImageResizer.rotate(myImage, ImageRotation.CW_90);
+    ImageResizer.rotate(myImageFile, ImageRotation.CW_90);
 
     // Flip an image horizontally or vertically
-    ImageResizer.rotate(myImage, ImageRotation.FLIP_HORIZONTAL);
+    ImageResizer.rotate(myImageFile, ImageRotation.FLIP_HORIZONTAL);
 
-### Files
-
-There is support for `File` parameter instead of `Bitmap` on all constructors and required parameter is than
-`boolean overwrite` if the rotated/scaled/cropped image should replace the original Bitmap file on the disk.
-
-    // Crop to 50x50 pixels and save cropped image to the original source file (overwrite it)
-    ImageResizer.crop(myBitmapFile, true, 50, 50);
 
 Developed by
 ------------
