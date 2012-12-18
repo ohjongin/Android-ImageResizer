@@ -15,28 +15,28 @@ import com.svenkapudija.imageresizer.utils.ImageWriter;
 public class ImageResizer {
 
 	// Resize
-	public static Bitmap resize(File original, int width, int height, ResizeMode ... mode) {
-		if(mode.length == 0) {
-			return ImageResize.resize(original, width, height, null);
-		} else {
-			return ImageResize.resize(original, width, height, mode[0]);
-		}
+	public static Bitmap resize(File original, int width, int height) {
+		return ImageResize.resize(original, width, height, null);
 	}
 	
-	public static Bitmap resize(byte[] byteArray, int width, int height, ResizeMode ... mode) {
-		if(mode.length == 0) {
-			return ImageResize.resize(byteArray, width, height, null);
-		} else {
-			return ImageResize.resize(byteArray, width, height, mode[0]);
-		}
+	public static Bitmap resize(File original, int width, int height, ResizeMode mode) {
+		return ImageResize.resize(original, width, height, mode);
 	}
 	
-	public static Bitmap resize(Resources resources, int resId, int width, int height, ResizeMode ... mode) {
-		if(mode.length == 0) {
-			return ImageResize.resize(resources, resId, width, height, null);
-		} else {
-			return ImageResize.resize(resources, resId, width, height, mode[0]);
-		}
+	public static Bitmap resize(byte[] byteArray, int width, int height) {
+		return ImageResize.resize(byteArray, width, height, null);
+	}
+	
+	public static Bitmap resize(byte[] byteArray, int width, int height, ResizeMode mode) {
+		return ImageResize.resize(byteArray, width, height, mode);
+	}
+	
+	public static Bitmap resize(Resources resources, int resId, int width, int height) {
+		return ImageResize.resize(resources, resId, width, height, null);
+	}
+	
+	public static Bitmap resize(Resources resources, int resId, int width, int height, ResizeMode mode) {
+		return ImageResize.resize(resources, resId, width, height, mode);
 	}
 	
 	// Crop
