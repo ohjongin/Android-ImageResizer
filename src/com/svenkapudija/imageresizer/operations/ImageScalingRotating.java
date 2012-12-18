@@ -2,17 +2,24 @@ package com.svenkapudija.imageresizer.operations;
 
 import java.io.ByteArrayOutputStream;
 
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.util.Log;
+
+import com.svenkapudija.imageresizer.utils.ImageOrientation;
 
 public class ImageScalingRotating {
 
 	private static Bitmap scaleOrRotate(Bitmap original, int width, int height, ImageRotation ... rotation) {
 		// Retrieved from http://stackoverflow.com/questions/4231817
 		
-		int inSampleSize = calculateInSampleSize(width, original.getWidth());
+		int inSampleSize = 0;
+		if(ImageOrientation.getOrientation(width, height) == ImageOrientation.LANDSCAPE) {
+			inSampleSize = calculateInSampleSize(width, original.getWidth());
+		} else {
+			inSampleSize = calculateInSampleSize(height, original.getHeight());
+		}
 
 		byte[] originalByteArray = convertBitmapToByteArray(original);
 		Bitmap sampledSrcBitmap = decodeBitmapWithInSampleSize(originalByteArray, inSampleSize);
@@ -26,7 +33,8 @@ public class ImageScalingRotating {
 		}
 		
 		sampledSrcBitmap.recycle();
-
+		sampledSrcBitmap = null;
+		
 		return resultBitmap;
 	}
 	
@@ -38,10 +46,11 @@ public class ImageScalingRotating {
 		return scaleOrRotate(original, width, height, rotation);
 	}
 
-	private static int calculateInSampleSize(int width, int srcWidth) {
+	private static int calculateInSampleSize(int size, int srcSize) {
 		int inSampleSize = 1;
-		while(srcWidth / 2 > width){
-		    inSampleSize *= 2;
+		while(srcSize / 2 >= size){
+		    inSampleSize *= 4;
+		    srcSize /= 2;
 		}
 		
 		return inSampleSize;
@@ -96,6 +105,7 @@ public class ImageScalingRotating {
 		original.compress(Bitmap.CompressFormat.PNG, 100, stream);
 		byte[] byteArray = stream.toByteArray();
 		original.recycle();
+		original = null;
 		return byteArray;
 	}
 	
