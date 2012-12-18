@@ -1,91 +1,77 @@
 package com.svenkapudija.imageresizer.operations;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Log;
+import android.graphics.Matrix;
 
-import com.svenkapudija.imageresizer.ImageResizerException;
+import com.svenkapudija.imageresizer.utils.ImageDecoder;
 import com.svenkapudija.imageresizer.utils.ImageOrientation;
-import com.svenkapudija.imageresizer.utils.ImageWriter;
 
 public class ImageResize {
 	
 	private static final String TAG = ImageResize.class.getName();
+	
+	private File original;
+	private int width;
+	private int height;
+	private ResizeMode mode;
+	
+	public ImageResize(File original, int width, int height, ResizeMode mode) {
+		this.original = original;
+		this.width = width;
+		this.height = height;
+		this.mode = mode;
+	}
 
-	public static Bitmap resize(Bitmap original, int width, int height, ResizeMode mode, DimensionUnit unit, Context ... context) {
-		try {
-			width = DimensionUnit.convertToPixels(unit, width, context);
-			height = DimensionUnit.convertToPixels(unit, height, context);
-		} catch (ImageResizerException e) {
-			Log.e(TAG, e.getMessage());
+	public Bitmap resize() {
+		Bitmap sampledSrcBitmap = ImageDecoder.decodeFile(original, width, height);
+		if(sampledSrcBitmap == null) {
 			return null;
 		}
 		
+		int sourceWidth = sampledSrcBitmap.getWidth();
+		int sourceHeight = sampledSrcBitmap.getHeight();
+		
 		if(mode == null || mode == ResizeMode.AUTOMATIC) {
-			mode = calculateResizeMode(original.getWidth(), original.getHeight());
+			mode = calculateResizeMode(sourceWidth, sourceHeight);
 		}
 		
 		if(mode == ResizeMode.FIT_TO_WIDTH) {
-			height = calculateHeight(original.getWidth(), original.getHeight(), width);
+			height = calculateHeight(sourceWidth, sourceHeight, width);
 		} else if(mode == ResizeMode.FIT_TO_HEIGHT) {
-			width = calculateWidth(original.getWidth(), original.getHeight(), height);
+			width = calculateWidth(sourceWidth, sourceHeight, height);
 		}
 		
-		return ImageScalingRotating.scale(original, width, height);
+		float desiredScale = calculateDesiredScale(width, sourceWidth);
+		Matrix matrix = new Matrix();
+		matrix.postScale(desiredScale, desiredScale);
+		
+		return Bitmap.createBitmap(sampledSrcBitmap, 0, 0, width, height, matrix, true);
 	}
 	
-	public static Bitmap resize(File original, boolean overwrite, int width, int height, ResizeMode mode, DimensionUnit unit, Context ... context) {
-		Bitmap originalBitmap = decodeFile(original, Math.max(width, height));
-		if(originalBitmap == null) {
-			return null;
+	private float calculateDesiredScale(int width, int srcWidth) {
+		while(srcWidth / 2 > width){
+		    srcWidth /= 2;
 		}
 		
-		Bitmap scaledBitmap = resize(originalBitmap, width, height, mode, unit, context);
-		originalBitmap.recycle();
-		
-		if(overwrite) {
-			ImageWriter.writeToFile(scaledBitmap, original);
-		}
-		
-		return scaledBitmap;
+		return (float) width / srcWidth;
 	}
-	
-	private static Bitmap decodeFile(File f, int size){
-	    try {
-	        BitmapFactory.Options o = new BitmapFactory.Options();
-	        o.inJustDecodeBounds = true;
-	        BitmapFactory.decodeStream(new FileInputStream(f),null,o);
 
-	        int scale=1;
-	        while(o.outWidth/scale/2 >= size && o.outHeight/scale/2 >= size) {
-	        	scale*=2;
-	        }
-
-	        BitmapFactory.Options o2 = new BitmapFactory.Options();
-	        o2.inSampleSize=scale;
-	        return BitmapFactory.decodeStream(new FileInputStream(f), null, o2);
-	    } catch (FileNotFoundException ignorable) {}
-	    
-	    return null;
-	}
 	
-	private static ResizeMode calculateResizeMode(int width, int height) {
-		if(ImageOrientation.getOrientation(width, height) == ImageOrientation.LANDSCAPE)
+	private ResizeMode calculateResizeMode(int width, int height) {
+		if(ImageOrientation.getOrientation(width, height) == ImageOrientation.LANDSCAPE) {
 			return ResizeMode.FIT_TO_WIDTH;
-		else
+		} else {
 			return ResizeMode.FIT_TO_HEIGHT;
+		}
 	}
 	
-	private static int calculateWidth(int originalWidth, int originalHeight, int height) {
+	private int calculateWidth(int originalWidth, int originalHeight, int height) {
 		return (int) (originalWidth / ((double) originalHeight/height));
 	}
 
-	private static int calculateHeight(int originalWidth, int originalHeight, int width) {
+	private int calculateHeight(int originalWidth, int originalHeight, int width) {
 		return (int) (originalHeight / ((double) originalWidth/width));
 	}
 	
