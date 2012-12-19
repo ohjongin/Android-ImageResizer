@@ -6,8 +6,8 @@ Simple library which provides `Bitmap` (in form of `File`, `byte[]` and `Resourc
 Usage
 --------
 
-Import a project into Eclipse and reference to it from your project as an Android Library project for more info visit
-[Referencing Library Project](http://developer.android.com/tools/projects/projects-eclipse.html#ReferencingLibraryProject).
+Copy-paste `.jar` file to your `/libs` folder and then in Eclipse right click on it and `Add to build path`.
+> [Download .jar - commit 96e2bad1c76f9cdf0efdb92d2a0b6961a1a7e630](http://www.svenkapudija.com/projects/imageresizer-96e2bad1c76f9cdf0efdb92d2a0b6961a1a7e630.jar)
 
 ### Resize
         
