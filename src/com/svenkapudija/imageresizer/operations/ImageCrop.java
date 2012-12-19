@@ -42,22 +42,20 @@ public class ImageCrop {
 		int sourceWidth = sampledSrcBitmap.getWidth();
 		int sourceHeight = sampledSrcBitmap.getHeight();
 		
-		if(originalIsSmallerThanResult(sourceWidth, sourceHeight, width, height))
-    		return sampledSrcBitmap;
-		
 		int newWidth, newHeight;
 		int originalAspectRatio = sourceWidth / sourceHeight;
 		int croppedAspectRatio = width / height;
 
 		if (originalIsWiderThanCroppedImage(originalAspectRatio, croppedAspectRatio)) {
 			newHeight = height;
-			newWidth = sourceWidth / (sourceHeight / height);
+			newWidth = (int) (sourceWidth / ((double) sourceHeight / height));
 		} else {
 			newWidth = width;
-			newHeight = sourceHeight / (sourceWidth / width);
+			newHeight = (int) (sourceHeight / ((double) sourceWidth / width));
 		}
 		
         Bitmap resizedBitmap = ImageResize.resize(sampledSrcBitmap, newWidth, newHeight, null);
+        sampledSrcBitmap.recycle();
         
         x = calculateX(x, resizedBitmap.getWidth(), width);
 		y = calculateY(y, resizedBitmap.getHeight(), height);
@@ -72,21 +70,23 @@ public class ImageCrop {
 		return originalAspectRatio >= croppedAspectRatio;
 	}
 
-	private static boolean originalIsSmallerThanResult(int originalWidth, int originalHeight, int width, int height) {
-		return originalWidth < width || originalHeight < height;
-	}
-	
-	private static int calculateX(int x, int newWidth, int width) {
+	private static int calculateX(int x, int sourceWidth, int width) {
         if(x < 0) {
-        	x = (newWidth - width) / 2;
+			x = (sourceWidth - width) / 2;
+			if (x < 0) {
+				x = 0;
+			}
         }
-        
+       
         return x;
 	}
 	
 	private static int calculateY(int y, int newHeight, int height) {
         if(y < 0) {
         	y = (newHeight - height) / 2;
+        	if (y < 0) {
+				y = 0;
+			}
         }
         
         return y;

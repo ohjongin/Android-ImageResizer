@@ -4,7 +4,6 @@ import java.io.File;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
 
 import com.svenkapudija.imageresizer.utils.ImageDecoder;
 import com.svenkapudija.imageresizer.utils.ImageOrientation;
@@ -54,21 +53,8 @@ public class ImageResize {
 			width = calculateWidth(sourceWidth, sourceHeight, height);
 		}
 		
-		float desiredScale = calculateDesiredScale(width, sourceWidth);
-		Matrix matrix = new Matrix();
-		matrix.postScale(desiredScale, desiredScale);
-		
-		return Bitmap.createBitmap(sampledSrcBitmap, 0, 0, width, height, matrix, true);
+		return Bitmap.createScaledBitmap(sampledSrcBitmap, width, height, true);
 	}
-	
-	private static float calculateDesiredScale(int width, int srcWidth) {
-		while(srcWidth / 2 > width){
-		    srcWidth /= 2;
-		}
-		
-		return (float) width / srcWidth;
-	}
-
 	
 	private static ResizeMode calculateResizeMode(int width, int height) {
 		if(ImageOrientation.getOrientation(width, height) == ImageOrientation.LANDSCAPE) {
