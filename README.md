@@ -7,7 +7,7 @@ Usage
 --------
 
 Copy-paste `.jar` file to your `/libs` folder and then in Eclipse right click on it and `Add to build path`.
-> [Download .jar - commit 96e2bad1c76f9cdf0efdb92d2a0b6961a1a7e630](http://www.svenkapudija.com/projects/imageresizer-96e2bad1c76f9cdf0efdb92d2a0b6961a1a7e630.jar)
+> [Download .jar - commit 8012d6b981bcbb0f6d35d6aa9195dacbb9542291](http://www.svenkapudija.com/projects/imageresizer-8012d6b981bcbb0f6d35d6aa9195dacbb9542291.jar)
 
 ### Resize
         
