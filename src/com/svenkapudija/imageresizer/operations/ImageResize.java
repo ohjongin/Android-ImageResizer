@@ -65,11 +65,11 @@ public class ImageResize {
 	}
 	
 	private static int calculateWidth(int originalWidth, int originalHeight, int height) {
-		return (int) (originalWidth / ((double) originalHeight/height));
+		return (originalWidth / (originalHeight/height));
 	}
 
 	private static int calculateHeight(int originalWidth, int originalHeight, int width) {
-		return (int) (originalHeight / ((double) originalWidth/width));
+		return (originalHeight / (originalWidth/width));
 	}
 	
 }
