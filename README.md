@@ -3,12 +3,6 @@ What is Android ImageResizer?
 Simple library which provides `Bitmap` (in form of `File`, `byte[]` and `Resource`) resizing, cropping, rotation, flipping on Android. Used tips from
 [developer.android.com](http://developer.android.com/training/building-graphics.html).
 
-Usage
---------
-
-Copy-paste `.jar` file to your `/libs` folder and then in Eclipse right click on it and `Add to build path`.
-> [Download .jar - commit 8012d6b981bcbb0f6d35d6aa9195dacbb9542291](http://www.svenkapudija.com/projects/imageresizer-8012d6b981bcbb0f6d35d6aa9195dacbb9542291.jar)
-
 ### Resize
         
     // Different width and height
